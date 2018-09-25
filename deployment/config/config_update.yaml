@@ -31,12 +31,12 @@ singleuser:
   #  limit: 0.5
   #  guarantee: 0.5
   image:
-    name : "jupyter/scipy-notebook"
-    tag : "137a295ff71b"
+    name : "gcr.io/e2-x-am/singleuser-winter"
+    tag : "c664e24"
   storage:
     dynamic:
       storageClass: standard
-    capacity: 2Gi
+    capacity: 5Gi
     #type: hostPath
     #extraVolumes:
     #  - name: home
