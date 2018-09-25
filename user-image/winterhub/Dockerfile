@@ -70,7 +70,7 @@ RUN pip install RISE==5.4.1 && \
     jupyter-nbextension install rise --py --sys-prefix
 
 # Install drawio
-RUN jupyter labextension install jupyterlab-drawio
+#RUN jupyter labextension install jupyterlab-drawio
 
 # Install jupyterlab-latex
 #RUN pip install jupyterlab_latex==0.4.1 && \
