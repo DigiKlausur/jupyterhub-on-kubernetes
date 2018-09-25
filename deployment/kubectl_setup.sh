@@ -5,7 +5,7 @@ gcloud config set compute/zone $ZONE
 
 # Create cluster
 CLUSTERNAME=e2-datahub
-gcloud beta container clusters create $CLUSTERNAME --machine-type n1-standard-1 --num-nodes 2 --disk-size 50 --cluster-version latest --node-labels hub.jupyter.org/node-purpose=core
+gcloud beta container clusters create $CLUSTERNAME --machine-type n1-standard-2 --num-nodes 1 --disk-size 100 --cluster-version latest --node-labels hub.jupyter.org/node-purpose=core
 kubectl get node
 
 EMAIL=mhm.wasil@gmail.com
