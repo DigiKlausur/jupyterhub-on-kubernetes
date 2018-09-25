@@ -54,30 +54,27 @@ RUN jupyter nbextension enable --py widgetsnbextension --sys-prefix && \
     jupyter serverextension enable --py jupyterlab --sys-prefix
 
 # nbresuse to show users memory usage
-RUN pip install git+https://github.com/data-8/nbresuse.git@2f9144f && \
-	jupyter serverextension enable  --sys-prefix --py nbresuse && \
-	jupyter nbextension     install --sys-prefix --py nbresuse && \
-	jupyter nbextension     enable  --sys-prefix --py nbresuse
+RUN pip install nbresuse==0.3.0
 
 # interact notebook extension
 RUN pip install nbgitpuller==0.6.1
 
 # Install nbzip
-RUN pip install nbzip==0.0.4 && \
+RUN pip install nbzip==0.1.0 && \
     jupyter serverextension enable  --sys-prefix --py nbzip && \
     jupyter nbextension     install --sys-prefix --py nbzip && \
     jupyter nbextension     enable  --sys-prefix --py nbzip
 
 # Install RISE for presentation
 RUN pip install RISE==5.4.1 && \
-    jupyter-nbextension install rise --py --sys-prefix 
+    jupyter-nbextension install rise --py --sys-prefix
 
 # Install drawio
 RUN jupyter labextension install jupyterlab-drawio
 
 # Install jupyterlab-latex
-RUN pip install jupyterlab_latex==0.4.1 && \
-    jupyter labextension install @jupyterlab/latex
+#RUN pip install jupyterlab_latex==0.4.1 && \
+#    jupyter labextension install @jupyterlab/latex
 
 ADD ipython_config.py ${IPYTHONDIR}/ipython_config.py
 
