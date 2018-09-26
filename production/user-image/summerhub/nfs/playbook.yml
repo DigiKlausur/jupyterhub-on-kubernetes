@@ -1,0 +1,71 @@
+- hosts: localhost
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: install nfs and zfs packages
+      apt:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - nfs-kernel-server
+        - zfsutils-linux
+      become: true
+
+    - name: check if pool has been created
+      shell: "/sbin/zpool status {{ pool_name }}"
+      register: pool_exists
+      ignore_errors: True
+      become: true
+
+    - name: create zpool
+      shell: "/sbin/zpool create -f {{ pool_name }} -m {{ pool_path }} mirror {{ disks }}"
+      when: pool_exists is failed
+      become: true
+
+    - name: add mount path to /etc/exports
+      lineinfile:
+        path: /etc/exports
+        line: "{{ export_path }} {{ nfs_client_subnet }}(rw,sync,no_subtree_check,all_squash,anonuid={{ anonuid }},anongid={{ anongid }})"
+      register: exports_written
+      become: true
+
+    - name: create zfs filesystem
+      zfs:
+        name: "{{ zfs_dataset }}"
+        state: present
+      become: true
+
+    - name: gather zfs facts
+      zfs_facts:
+        dataset: "{{ zfs_dataset }}"
+        type: filesystem
+      become: true
+
+    - name: check if zfs dataset is mounted
+      fail:
+        msg: "{{ zfs_dataset }} not mounted"
+      with_items: "{{ ansible_zfs_datasets }}"
+      when: item.name == zfs_dataset and item.mounted != "yes"
+      become: true
+
+    - name: create mount path directory
+      file:
+        path: "{{ export_path }}"
+        state: directory
+        recurse: yes
+      become: true
+
+    - name: set permissions on the exported directory
+      file:
+        path: "{{ export_path }}"
+        state: directory
+        recurse: no
+        owner: "{{ anongid }}"
+        group: "{{ anongid }}"
+        mode: 0755
+      become: true
+
+    - name: export filesystem
+      command: /usr/sbin/exportfs -a
+      when: exports_written.changed
+      become: true

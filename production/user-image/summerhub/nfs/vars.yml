@@ -1,0 +1,8 @@
+anongid: 1000
+anonuid: 1000
+pool_name: pool0
+pool_path: /export/pool0
+export_path: /export/pool0/homes
+zfs_dataset: pool0/homes
+disks: "/dev/sdb /dev/sdc"
+nfs_client_subnet: 10.0.0.0/8
