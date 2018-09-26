@@ -1,0 +1,50 @@
+# staging
+gcloud compute instances create nfsserver \
+  --image-family projects/ubuntu-os-cloud/global/images/family/ubuntu-1804-lts \
+  --machine-type n1-highmem-2 \
+  --zone us-west1-b
+# 10.138.0.5
+gcloud compute disks create disk-1 disk-2 \
+	--size 500GB --zone us-west1-b --type=pd-ssd
+gcloud compute instances attach-disk nfsserver --disk disk-1
+gcloud compute instances attach-disk nfsserver --disk disk-2
+gcloud compute ssh nfsserver
+
+# prod
+gcloud compute instances create nfsserver-prod \
+  --image-family projects/ubuntu-os-cloud/global/images/family/ubuntu-1804-lts \
+  --machine-type n1-highmem-2 \
+  --zone us-west1-b
+# 10.138.0.9
+gcloud compute disks create disk-prod-1 disk-prod-2 \
+	--size 500GB --zone us-west1-b --type=pd-ssd
+gcloud compute instances attach-disk nfsserver-prod --disk disk-prod-1
+gcloud compute instances attach-disk nfsserver-prod --disk disk-prod-2
+gcloud compute ssh nfsserver-prod
+
+
+# set -euxo pipefail
+CLONE_PATH=/var/lib/ansible
+sudo parted /dev/sdb mklabel gpt
+sudo parted /dev/sdc mklabel gpt
+sudo apt-get update
+sudo apt-get install --yes ansible git
+sudo git clone http://github.com/berkeley-dsep-infra/summerhub ${CLONE_PATH}
+sudo ansible-playbook -c local -i localhost, ${CLONE_PATH}/nfs/playbook.yml
+
+
+
+# gcloud compute firewall-rules create allow-nfs \
+# 	--allow=TCP:0-65535 --description="Allow TCP from k8s cluster" \
+#     --destination-ranges=10.138.0.5/32 \
+#     --source-ranges=10.0.0.0/16 \
+
+gcloud compute firewall-rules create allow-nfs \
+	--description="Allow TCP from k8s cluster" \
+	--direction=INGRESS \
+	--network=default \
+	--action=ALLOW \
+	--rules=TCP:111,udp:111,tcp:2049,udp:2049 \
+	--source-ranges=10.0.0.0/16
+
+

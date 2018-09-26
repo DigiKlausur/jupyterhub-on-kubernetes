@@ -1,0 +1,74 @@
+## 2018-03-06
+#version: "v0.7-b107e34"
+version: "v0.6.0"
+
+rbac:
+  enabled: true
+
+hub:
+  extraConfig: |
+    from kubespawner import KubeSpawner
+    from tornado import gen
+    import yaml
+
+    class CustomKubeSpawner(KubeSpawner):
+      @gen.coroutine
+      def start(self):
+        with open('/etc/jupyterhub/config/custom.memory') as f:
+          custom_attr_lists = yaml.safe_load(f)
+          for attr, users in custom_attr_lists.items():
+            if self.user.name in users:
+              self.mem_limit = attr
+              self.mem_guarantee = attr
+              break
+
+        return (yield super().start())
+    c.JupyterHub.spawner_class = CustomKubeSpawner
+
+cull:
+  enabled: true
+  timeout: 3600
+  every: 600
+
+auth:
+  type: google
+  admin:
+    users:
+      # infrastructure
+      - rylo
+      - yuvipanda
+      # su18 data8 instructors
+      - deborah_nolan
+      - fhdkmrn
+      - vinitra
+      - adhikari
+      # su18 data8 GSIs
+      - hsubbaraj
+      - rroggenkemper
+      # su18 data8 staff
+      - aidandeangelis
+      - clairezhang
+      - howardki888
+      - imaneslami
+      - lillianlouie
+      - liusabrina
+      - narain.rohan
+      - sathviknair
+      - sjamil
+
+singleuser:
+  memory:
+    guarantee: 1G
+    limit: 1G
+  storage:
+    type: hostPath
+    extraVolumes:
+      - name: home
+        hostPath:
+          path: /mnt/homes/{username}
+    extraVolumeMounts:
+      - name: home
+        mountPath: /home/jovyan
+  schedulerStrategy: pack
+  image:
+    name: "gcr.io/smooth-calling-205216/singleuser-summer"
