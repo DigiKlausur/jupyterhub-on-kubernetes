@@ -76,7 +76,7 @@ RUN pip install jupyter_contrib_nbextensions==0.5.0 && \
     jupyter nbextension enable --sys-prefix nbTranslate/main
 
 # Install drawio
-RUN jupyter labextension install jupyterlab-drawio
+#RUN jupyter labextension install jupyterlab-drawio
 
 # Install jupyterlab-latex
 #RUN pip install jupyterlab_latex==0.4.1 && \
