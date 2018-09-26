@@ -48,7 +48,7 @@ RUN python3.6 -m venv ${APP_DIR}/venv
 COPY requirements.txt /tmp/requirements.txt
 RUN pip install --no-cache-dir -r /tmp/requirements.txt
 
-RUN pip install --no-cache-dir jupyterhub==0.9.4
+RUN pip install --no-cache-dir jupyterhub==0.8.1
 
 RUN jupyter nbextension enable --py widgetsnbextension --sys-prefix && \
     jupyter serverextension enable --py jupyterlab --sys-prefix
@@ -76,7 +76,7 @@ RUN pip install jupyter_contrib_nbextensions==0.5.0 && \
     jupyter nbextension enable --sys-prefix nbTranslate/main
 
 # Install drawio
-#RUN jupyter labextension install jupyterlab-drawio
+RUN jupyter labextension install jupyterlab-drawio
 
 # Install jupyterlab-latex
 #RUN pip install jupyterlab_latex==0.4.1 && \
