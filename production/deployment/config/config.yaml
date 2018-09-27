@@ -13,18 +13,8 @@ hub:
 auth:
   whitelist:
     users:
-      - mhwasil
-      - n_dnair2s
   admin:
     users:
-      - mhwasil
-      - b_hbalab2s
-      - b_pbecke2m
-      - k_akuenst2m
-      - l_olanze2m
-      - m_amitre2s
-      - p_pploeg2m
-      - n_dnair2s
 
 #auth:
 #  type: github
@@ -43,13 +33,13 @@ singleuser:
   
   memory:
     limit: 1G
-    #guarantee: 1G
+    guarantee: 0.12G
   cpu:
     limit: 0.75
-    #guarantee: 0.5
+    #guarantee: 0.1
   image:
     name : "gcr.io/e2-x-am-datahub/singleuser-winter"
-    tag : "15f8ea0"
+    tag : "b23478c"
   
   storage:
     dynamic:
