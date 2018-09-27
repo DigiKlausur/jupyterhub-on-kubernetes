@@ -1,2 +1,79 @@
 proxy:
-  secretToken: "e7bff733b77309ca273df70e6680e582b0ebf4baf888f73d3d596e90dab019cf"
+  secretToken: "45b5e5351d21030422206b5e1abd95f5cac12ff3d33a346e0d8751802422b6bda1faec99c3237c8d2b63195e3cf696dc5d7404e03e982efe1eb886bc7aed4592"
+  https:
+    hosts:
+      - notebooks.open-robotik.org
+    letsencrypt:
+      contactEmail: mhm.wasil@gmail.com
+
+hub:
+  cookieSecret: "a6b464d58626c735f407d5f922bb4246c3ae05bd8dd823fabdfc8a77c858ecf888df6be92cacbacfe974fd6c7d59d2a7f76cf7f1cb3455a60e6a56d16b038791"
+  extraConfig: |-
+    c.Spawner.cmd = ['jupyter-labhub']
+
+auth:
+  whitelist:
+    users:
+      - student1
+      - student2
+      - mhwasil
+  admin:
+    users:
+      - instructor1
+      - instructor2
+
+#auth:
+#  type: github
+#  github:
+#    clientId: "4c4b0149fbee3d1edae3"
+#    clientSecret: "be560598fa89096f2e02f1ee72232d9b0eb277d5"
+#    callbackUrl: "http://35.205.211.124/hub/login"
+
+singleuser:
+  defaultUrl: "/tree"
+
+  lifecycleHooks:
+    postStart:
+      exec:
+        command: ["gitpuller", "https://github.com/mhwasil/jupyterhub-kubernetes.git", "master", "mas-materials"]
+  
+  memory:
+    limit: 1G
+    #guarantee: 1G
+  cpu:
+    limit: 0.5
+    #guarantee: 0.5
+  image:
+    #name : "gcr.io/e2-x-am-datahub/singleuser-winter"
+    #tag : "376eed3"
+    name : "gcr.io/mas-datahub/singleuser-winter"
+    tag : "44897ff"
+    #name : "gcr.io/e2-x-am/singleuser-winter"
+    #tag : "376eed3"
+    #name : "berkeleydsep/singleuser-data100"
+    #tag : "b033bf9"
+  storage:
+    dynamic:
+      storageClass: standard
+    capacity: 5Gi
+    #type: hostPath
+    #extraVolumes:
+    #  - name: home
+    #    hostPath:
+    #      path: /mnt/homes/{username}
+    #  - name: nbgrader
+    #    hostPath:
+    #      path: /mnt/homes/_nbgrader
+    #  #- name: newnbgrader1
+    #  #  azureFile:
+    #  #    secretName: azure-secret
+    #  #    shareName: newnbgrader1
+    #  #    readOnly: false
+    #extraVolumeMounts:
+    #  - name: home
+    #    mountPath: /home/jovyan
+    #  - name: nbgrader
+    #    mountPath: /srv/nbgrader
+    #  #- name: newnbgrader1
+    #  #  mountPath: /srv/.trash
+#schedulerStrategy: pack
