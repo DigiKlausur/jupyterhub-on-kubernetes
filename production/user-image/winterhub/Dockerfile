@@ -73,7 +73,8 @@ RUN pip install RISE==5.4.1 && \
 RUN pip install jupyter_contrib_nbextensions==0.5.0 && \
     jupyter contrib nbextension install --sys-prefix && \
     jupyter nbextension enable --sys-prefix codefolding/main && \
-    jupyter nbextension enable --sys-prefix nbTranslate/main
+    jupyter nbextension enable --sys-prefix nbTranslate/main && \
+    jupyter nbextension enable --sys-prefix collapsible_headings/main
 
 # Install drawio
 #RUN jupyter labextension install jupyterlab-drawio
