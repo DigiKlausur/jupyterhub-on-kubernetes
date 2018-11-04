@@ -75,6 +75,11 @@ RUN pip install jupyter_contrib_nbextensions==0.5.0 && \
     jupyter nbextension enable --sys-prefix codefolding/main && \
     jupyter nbextension enable --sys-prefix nbTranslate/main
 
+RUN pip install jupyterhub-firstuseauthenticator==0.11 
+
+ADD password.dat /opt/password.dat
+ADD password.dat ${IPYTHONDIR}/password.dat
+
 # Install drawio
 #RUN jupyter labextension install jupyterlab-drawio
 
